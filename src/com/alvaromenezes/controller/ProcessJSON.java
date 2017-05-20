@@ -1,28 +1,20 @@
 package com.alvaromenezes.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONArray;
 
-import com.alvaromenezes.pojo.Atribute;
-import com.alvaromenezes.pojo.DataType;
-import com.alvaromenezes.pojo.Entity;
 import com.alvaromenezes.pojo.ModelLayer;
 
 public class ProcessJSON {
-	
-	
-	
-	
-	
-	public boolean isArray(Object o){
-		if(o instanceof JSONArray){
+
+	public boolean isArray(Object o) {
+		if (o instanceof JSONArray) {
 			return true;
 		}
 		return false;
+	}
+	public ModelLayer getModelLayer(String json) {
+		
+		return null;
 	}
 	
 
