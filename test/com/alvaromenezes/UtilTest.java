@@ -11,16 +11,14 @@ import junit.framework.TestCase;
 @RunWith(JUnit4.class)
 public class UtilTest extends TestCase {
 
-@Test
-	public void fistUpperCaseTest(){
-		
-			
-			Util util = new Util();
-					
-			String  value = util.fistUpperCase("java");		
-	
-			assertEquals("Java", value);
+	@Test
+	public void fistUpperCaseTest() {
+
+		Util util = new Util();
+
+		String value = util.fistUpperCase("java");
+
+		assertEquals("Java", value);
 	}
-	
 
 }
