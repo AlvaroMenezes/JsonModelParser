@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.alvaromenezes.pojo.Attribute;
@@ -19,63 +18,54 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ProcessJSON {
 
-
 	public void addAttributes(HashMap<String, Entity> entities, JsonNode node) {
 
 		String entityName = node.fields().next().getKey();
 		entityName = Util.fistUpperCase(entityName);
 
-		//if (!entities.containsKey(entityName)) {
+		JsonNode child = node.path(node.fields().next().getKey());
+		Iterator<Map.Entry<String, JsonNode>> fields = child.fields();
+		while (fields.hasNext()) {
+			Map.Entry<String, JsonNode> entry = fields.next();
 
-			JsonNode child = node.path(node.fields().next().getKey());
-			Iterator<Map.Entry<String, JsonNode>> fields = child.fields();
-			while (fields.hasNext()) {
-				Map.Entry<String, JsonNode> entry = fields.next();
+			if (entry.getValue().isObject()) {
 
-				if (entry.getValue().isObject()) {
+				String name = Util.fistLowerCase(entry.getKey());
+				String type = Util.fistUpperCase(entry.getKey());
 
-					String name = Util.fistUpperCase(entry.getKey());
-					String type = Util.fistLowerCase(entry.getKey());
+				Attribute attribute = new Attribute(name, type);
+				entities.get(entityName).attributes.add(attribute);
 
-					Attribute attribute = new Attribute(name, type);
-					entities.get(entityName).attributes.add(attribute);
-					
-					ObjectNode xxx = JsonNodeFactory.instance.objectNode();
-					xxx.put( entry.getKey(),entry.getValue());
+				ObjectNode xxx = JsonNodeFactory.instance.objectNode();
+				xxx.put(entry.getKey(), entry.getValue());
 
-					addEntity(entities,xxx);
+				addEntity(entities, xxx);
 
-				} else if (entry.getValue().isArray()) {
+			} else if (entry.getValue().isArray()) {
 
-				} else {
-					String name = Util.fistLowerCase(entry.getKey());
-					String type = getDataType(entry.getValue());
+			} else {
+				String name = Util.fistLowerCase(entry.getKey());
+				String type = getDataType(entry.getValue());
 
-					Attribute attribute = new Attribute(name, type);
-					
-					entities.get(entityName).attributes.add(attribute);
-				}
+				Attribute attribute = new Attribute(name, type);
 
+				entities.get(entityName).attributes.add(attribute);
 			}
 
-	//	}
-
+		}
 	}
 
 	public void addEntity(HashMap<String, Entity> entities, JsonNode node) {
 
-		System.out.println("addEntity");
-
 		String name = node.fields().next().getKey();
 		name = Util.fistUpperCase(name);
-		
+
 		if (!entities.containsKey(name)) {
 			Entity entity = new Entity(name);
 
-			entities.put(name, entity);	
+			entities.put(name, entity);
 			addAttributes(entities, node);
 		}
-		
 	}
 
 	public boolean isEntity(JsonNode jsonNode) {
@@ -98,22 +88,19 @@ public class ProcessJSON {
 
 				addEntity(entities, rootNode);
 
-			}else{
+			} else {
 				Entity entity = new Entity("Model");
 				ObjectNode node = JsonNodeFactory.instance.objectNode();
 				node.put("Model", rootNode);
-				
+
 				addEntity(entities, node);
 			}
-			
-		
 
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
-		
-		ModelLayer model = new ModelLayer( new ArrayList<Entity> (entities.values()));
-		
+
+		ModelLayer model = new ModelLayer(new ArrayList<Entity>(entities.values()));
 
 		return model;
 	}
