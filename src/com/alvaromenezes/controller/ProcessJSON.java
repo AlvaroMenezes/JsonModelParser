@@ -43,6 +43,28 @@ public class ProcessJSON {
 
 			} else if (entry.getValue().isArray()) {
 
+				String type = "";
+
+				JsonNode aryay = entry.getValue();
+
+				for (JsonNode item : aryay) {
+
+					if (item.isObject()) {
+
+						type = Util.fistUpperCase(entry.getKey());
+						addEntity(entities, item);
+					} else {
+
+						type = getDataType(item);
+					}
+
+					break;
+				}
+
+				String name = Util.fistLowerCase(entry.getKey());
+				Attribute attribute = new Attribute(name, type, true);
+				entities.get(entityName).attributes.add(attribute);
+
 			} else {
 				String name = Util.fistLowerCase(entry.getKey());
 				String type = getDataType(entry.getValue());
@@ -89,9 +111,9 @@ public class ProcessJSON {
 				addEntity(entities, rootNode);
 
 			} else {
-				Entity entity = new Entity("Model");
+				Entity entity = new Entity("DefaulModel");
 				ObjectNode node = JsonNodeFactory.instance.objectNode();
-				node.put("Model", rootNode);
+				node.put("DefaultModel", rootNode);
 
 				addEntity(entities, node);
 			}

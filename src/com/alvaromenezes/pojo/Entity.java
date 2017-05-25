@@ -12,7 +12,7 @@ public class Entity {
 		this.name = name;
 		this.attributes = attributes;
 	}
-	
+
 	public Entity(String name) {
 		this.name = name;
 		this.attributes = new ArrayList<Attribute>();
